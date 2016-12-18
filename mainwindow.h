@@ -26,8 +26,6 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void send();
-    void connect();
     ~MainWindow();
 
 private:
@@ -37,7 +35,12 @@ private:
     QSettings settings;
 
 private slots:
+    void send();
     void openSettings();
+    void connect();
+
+public slots:
+    void RecvData();
 };
 
 #endif // MAINWINDOW_H

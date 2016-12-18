@@ -4,11 +4,13 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+     settings(ORGAN_NAME, APP_NAME)
 {
     ui->setupUi(this);
-    settings(ORGAN_NAME, APP_NAME);
     CreateMenu();
+
+   QObject::connect(ui->btnSend, SIGNAL(clicked()), this, SLOT(send()));
 }
 
 MainWindow::~MainWindow()
@@ -39,11 +41,24 @@ void MainWindow::connect()
     this->client = std::unique_ptr<TcpClient>(new TcpClient(this));
     client->connect(QHostAddress(settings.value(SETTINGS_IP).toString()),
                    settings.value(SETTINGS_PORT).toInt());
+    QObject::connect(client->GetSocket(), SIGNAL(readyRead()), this, SLOT(RecvData()));
+    ui->txtOutput->append("Connected to " +
+                          settings.value(SETTINGS_IP).toString() +
+                          ":" +
+                          settings.value(SETTINGS_PORT).toString());
+}
+
+void MainWindow::RecvData()
+{
+    QString data(this->client->read());
+    ui->txtOutput->append("<- : " + data);
 }
 
 void MainWindow::send()
 {
     QString sendData = ui->txtInput->toPlainText();
+    ui->txtInput->setText("");
+    ui->txtOutput->append("-> : " + sendData);
     QByteArray array (sendData.toStdString().c_str());
     client->write(array);
 }
@@ -54,6 +69,6 @@ void MainWindow::CreateMenu()
     auto actConnect = new QAction("Connect", this);
     ui->menuBar->addAction(actConnect);
     ui->menuBar->addAction(actSettings);
-    connect(actConnect, SIGNAL(triggered()), this, SLOT(connect()));
-    connect(actSettings, SIGNAL(triggered()), this, SLOT(openSettings()));
+    QObject::connect(actConnect, SIGNAL(triggered()), this, SLOT(connect()));
+    QObject::connect(actSettings, SIGNAL(triggered()), this, SLOT(openSettings()));
 }
