@@ -1,0 +1,22 @@
+#include "tcpclient.h"
+
+TcpClient::TcpClient(QObject *parent) : QObject(parent)
+{
+
+}
+void TcpClient::connect(const QHostAddress &addr, const quint16 port)
+{
+    this->socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
+    socket->connectToHost(addr, port);
+    socket->waitForConnected();
+}
+
+void TcpClient::write(QByteArray &data)
+{
+    socket->write(data);
+}
+
+QByteArray TcpClient::read()
+{
+    return socket->readAll();
+}

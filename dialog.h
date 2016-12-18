@@ -15,6 +15,10 @@ public:
     explicit Dialog(QWidget *parent = 0);
     QString getUserName() const;
     QString getIP() const;
+    QString getPort() const;
+    void setUserName(const QString& str);
+    void setIp(const QString& str);
+    void setPort(const QString& str);
     ~Dialog();
 
 private:

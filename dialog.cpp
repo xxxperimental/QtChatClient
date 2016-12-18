@@ -10,6 +10,21 @@ Dialog::Dialog(QWidget *parent) :
     SetValidator();
 }
 
+void Dialog::setUserName(const QString& str)
+{
+    this->ui->leUserName->setText(str);
+}
+
+void Dialog::setIp(const QString& str)
+{
+    this->ui->leIp->setText(str);
+}
+
+void Dialog::setPort(const QString& str)
+{
+    this->ui->lePort->setText(str);
+}
+
 QString Dialog::getUserName() const
 {
     return ui->leUserName->text();
@@ -19,6 +34,12 @@ QString Dialog::getIP() const
 {
     return ui->leIp->text();
 }
+
+QString Dialog::getPort() const
+{
+    return ui->lePort->text();
+}
+
 
 Dialog::~Dialog()
 {
