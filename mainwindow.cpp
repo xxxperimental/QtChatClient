@@ -51,14 +51,13 @@ void MainWindow::connect()
 void MainWindow::RecvData()
 {
     QString data(this->client->read());
-    ui->txtOutput->append("<- : " + data);
+    ui->txtOutput->append(data);
 }
 
 void MainWindow::send()
 {
-    QString sendData = ui->txtInput->toPlainText();
+    QString sendData = settings.value(SETTINGS_UN).toString() + ": " + ui->txtInput->toPlainText();
     ui->txtInput->setText("");
-    ui->txtOutput->append("-> : " + sendData);
     QByteArray array (sendData.toStdString().c_str());
     client->write(array);
 }
